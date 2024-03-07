@@ -8,14 +8,18 @@ document.addEventListener("DOMContentLoaded", function() {
 	// const M = 2e24; // Sun is 2*10^30 kg = 2*10^25 gg
 	// const G = 6e-26; // Gravitational constant in gg-gm
 	const GM = 12e-2 // Defined directly to avoid floating point awfulness.
-	const image = document.getElementById("Earth");
+	// const image = document.getElementById("Earth");
 	
-	function Planet(id, name, imageUrl, mass, maxDistance, velocityAtMaxDistance, axialTilt, initialAngle){
+	function Planet(id, name, imageUrl, mass, maxDistance, velocityAtMaxDistance, axialTilt, initialAngle, description, author){
 		this.id = id;
 		this.name = name;
 		this.imageUrl = imageUrl;
 		this.maxDistance = maxDistance;
 		this.velocityAtMaxDistance = velocityAtMaxDistance;
+		this.description = description;
+		this.author = author;
+		
+		
 		this.angularVelocityAtMaxDistance = velocityAtMaxDistance/maxDistance;
 		this.masslessAngularMomentum = maxDistance**2 * this.angularVelocityAtMaxDistance;
 		
@@ -35,6 +39,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		this.y = function(theta) {
 			return this.distance(theta)*Math.sin(theta + axialTilt);
 		}
+		
+		this.image = new Image();
+		this.image.src = imageUrl;
+		
+		this.drawBody = function(star) {
+			ctx.drawImage(this.image, star.x + this.x(this.theta), star.y + this.y(this.theta), 20, 20);
+		}
 	}
 	
 	// For testing
@@ -44,10 +55,12 @@ document.addEventListener("DOMContentLoaded", function() {
 	Sun.x = 500;
 	Sun.y = 500;
 	
+	var bodies = [];
 	
-	var Earth = new Planet(1, "Earth","None", 6e18, 148, 3e-5, 0, 0); 
+	//var Earth = new Planet(1, "Earth","Earth.webp", 6e18, 148, 3e-5, 0, 0); 	
 	
-	
+	bodies[0] = new Planet(1, "Earth","Earth.webp", 6e18, 148, 3e-5, 0, 0);
+	bodies[1] = new Planet(2, "Mars", "Mars.jpg", 6e17, 250, 2.4e-5, 0, 0); 
 	
     function draw() {
          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
@@ -58,17 +71,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		ctx.fillStyle = "yellow";
         ctx.fill();
 		
-		// Draw the Earth
-		//ctx.beginPath();
-		//ctx.arc(500 + Earth.x(Earth.theta), 500 + Earth.y(Earth.theta), 20, 0, 2*Math.PI);
-		//ctx.fill();
-		ctx.drawImage(image,500 + Earth.x(Earth.theta),500 + Earth.y(Earth.theta),20,20)
-		
-		// Earth.theta += 1
-		Earth.updateTheta(60*60);
-				
-		//ctx.drawImage(image,x,y,20,20)
-
+		// Draw the bodies
+		for (i in bodies){
+			bodies[i].drawBody(Sun);
+			bodies[i].updateTheta(60*60);
+		}
 
         requestAnimationFrame(draw); // Request the next frame
     }
