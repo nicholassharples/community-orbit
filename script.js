@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+	
+	const imageFolder = "images/";
+	
     const canvas = document.getElementById('animationCanvas');
     const ctx = canvas.getContext('2d');
 	// 1 pixel is 1,000,000 km (Earth-Sun distance is 148 pixels)
@@ -8,12 +11,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	// const M = 2e24; // Sun is 2*10^30 kg = 2*10^25 gg
 	// const G = 6e-26; // Gravitational constant in gg-gm
 	const GM = 12e-2 // Defined directly to avoid floating point awfulness.
-	// const image = document.getElementById("Earth");
 	
-	function Planet(id, name, imageUrl, mass, maxDistance, velocityAtMaxDistance, axialTilt, initialAngle, description, author){
+	function Planet(id, name, imageFileName, mass, maxDistance, velocityAtMaxDistance, axialTilt, initialAngle, description, author){
 		this.id = id;
 		this.name = name;
-		this.imageUrl = imageUrl;
+		this.imageFileName = imageFileName;
 		this.maxDistance = maxDistance;
 		this.velocityAtMaxDistance = velocityAtMaxDistance;
 		this.description = description;
@@ -41,15 +43,15 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		this.image = new Image();
-		this.image.src = imageUrl;
+		this.image.src = imageFileName;
 		
 		this.drawBody = function(star) {
 			ctx.drawImage(this.image, star.x + this.x(this.theta), star.y + this.y(this.theta), 20, 20);
 		}
 	}
 	
-	// For testing
-	
+
+	// Just one star for now!
 	var Sun = {};
 	
 	Sun.x = 500;
@@ -57,10 +59,35 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	var bodies = [];
 	
-	//var Earth = new Planet(1, "Earth","Earth.webp", 6e18, 148, 3e-5, 0, 0); 	
+	fetch("odyssey.php")
+		.then(response => response.json())
+		.then(data => {loadData(data);
+		})
+		.catch(error => console.error("Error:", error));
 	
-	bodies[0] = new Planet(1, "Earth","Earth.webp", 6e18, 148, 3e-5, 0, 0);
-	bodies[1] = new Planet(2, "Mars", "Mars.jpg", 6e17, 250, 2.4e-5, 0, 0); 
+	
+	function loadData(data) {
+		//console.log(data);
+		for (i in data){
+			bodies[i] = new Planet(	data[i].id,
+									data[i].name,
+									imageFolder + data[i].imageFileName,
+									parseFloat(data[i].mass),
+									parseFloat(data[i].maxDistance),
+									parseFloat(data[i].velocityAtMaxDistance),
+									parseFloat(data[i].axialTilt),
+									parseFloat(data[i].initialAngle),
+									data[i].description,
+									data[i].author)
+	}
+	console.log(bodies);
+	}
+	
+	
+	//bodies[0] = new Planet(1, "Earth",imageFolder + "Earth.webp", 6e18, 148, 3e-5, 0, 0);
+	//bodies[1] = new Planet(2, "Mars", imageFolder + "Mars.jpg", 6e17, 250, 2.4e-5, 0, 0); 
+	
+	//console.log(bodies);
 	
     function draw() {
          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas

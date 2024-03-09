@@ -17,11 +17,14 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM celestial_objects";
 $result = $conn->query($sql);
 
+// Initialize an array to store the fetched data
+$data = [];
+
 // Check if there are results
 if ($result->num_rows > 0) {
     // Output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "id: " . $row["id"]. " - Name: " . $row["name"]. " - x: " . $row["x"]. " - y: " . $row["y"]. "<br>";
+        $data[] = $row;
     }
 } else {
     echo "0 results";
@@ -29,4 +32,7 @@ if ($result->num_rows > 0) {
 
 // Close connection
 $conn->close();
+
+// Output the data in JSON format
+echo json_encode($data);
 ?>
