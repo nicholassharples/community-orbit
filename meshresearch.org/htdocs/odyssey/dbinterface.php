@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+// Your protected page content below
+echo "Welcome, you are logged in!";
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

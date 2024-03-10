@@ -1,5 +1,5 @@
 <?php
-$target_dir = "images/";
+$target_dir = "images/originals/";
 $source_file = basename($_FILES["fileToUpload"]["name"]);
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $imageFileType = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
@@ -72,3 +72,5 @@ if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
 // $conn->close();
 ?>
+
+
