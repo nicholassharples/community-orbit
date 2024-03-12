@@ -27,26 +27,26 @@ echo "Welcome! Here you can add a planet to our database.";
 		Planet mass: Pluto <input type="range" min="0" max="500" value="278" class="slider" id="massSlider" name="planetMass"> Jupiter. Value: <span id="massValue"></span>
         <br>
 		<br>
-		Planet maximum distance: Mercury <input type="range" min="48" max="500" value="148" class="slider" id="distanceSlider" name="planetDistance"> Jupiter. Value: <span id="distanceValue"></span>
+		Planet distance (at angle 0&deg): Mercury <input type="range" min="48" max="500" value="148" class="slider" id="distanceSlider" name="planetDistance"> Jupiter. Value: <span id="distanceValue"></span>
         <br>
 		<br>
-		Planet speed at maximum distance: Stationary <input type="range" min="0" max="500" value="297" class="slider" id="velocitySlider" name="planetVelocity"> Mercury. Value: <span id="velocityValue"></span>
+		Planet speed (at angle 0&deg): Stationary <input type="range" min="0" max="500" value="297" class="slider" id="velocitySlider" name="planetVelocity"> Mercury. Value: <span id="velocityValue"></span>
         <br>
 		<br>
-		Planet argument of periapsis: <input type="range" min="0" max="360" value="0" class="slider" id="tiltSlider" name="planetTilt"> Value: <span id="tiltValue"></span>
+		Planet major axis angle: <input type="range" min="0" max="360" value="0" class="slider" id="tiltSlider" name="planetTilt"> Value: <span id="tiltValue"></span>
         <br>
 		<br>
-		Planet angle from periapsis: <input type="range" min="0" max="360" value="0" class="slider" id="initialAngleSlider" name="planetInitialAngle"> Value: <span id="initialAngleValue"></span>
+		Planet initial angle: <input type="range" min="0" max="360" value="0" class="slider" id="initialAngleSlider" name="planetInitialAngle"> Value: <span id="initialAngleValue"></span>
         <br>
 		<br>
-		Description of planet: <textarea rows="10" cols="50" name="planetDescription" placeholder="Description of planet" required></textarea>
+		Description of planet: <textarea rows="10" cols="50" name="planetDescription" placeholder="Description of planet"></textarea>
         <br>
 		<br>
-		Discovered by: <input type="text" placeholder="Your name" name="planetAuthor" required>
+		Discovered by: <input type="text" placeholder="Your name" name="planetAuthor">
         <br>
 		<br>
 		
-		<input type="checkbox" required> I consent for my planet to be added to the database to appear on meshresearch.org/odyssey. Further I release my artwork to be used in current and future meshresearch maths communication projects.
+		<input type="checkbox" required> I consent for my planet to be added to the database to appear on meshresearch.org/odyssey. Further I release my artwork, name, planet name and planet description to be used in current and future meshresearch maths communication projects.
 		<br>
 		<br>
 		<input type="submit" value="Add Planet" name="submit">

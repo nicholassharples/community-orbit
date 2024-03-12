@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	};
 
-
+	
 
 	// Just one star for now!
 	var Sun = {};
@@ -108,6 +108,35 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	
+	// Set simulation speed
+	var timeDelta = 60*60
+	// For changing simulation speed
+	var secondsPerFrameSlider = document.getElementById("secondsPerFrame");
+	var secondsPerFrameDisplay = document.getElementById("secondsPerFrameValue");
+	secondsPerFrameDisplay.innerHTML = secondsPerFrameSlider.value + " s";
+	secondsPerFrameSlider.oninput = function() {
+		secondsPerFrameDisplay.innerHTML = this.value + " s";
+		timeDelta = this.value;
+	}
+	
+	
+	// For drawing fps
+	var fps = 0;
+	var lastframe = Date.now();
+	var fpsDisplay = document.getElementById("fpsValue");
+	
+	// For calculating Days, Hours, Minutes from seconds
+	function secondsToDHM(s) {
+		days = Math.floor(s / (60*60*24));
+		s %= (60*60*24);
+		hours = Math.floor(s / (60*60));
+		minutes = Math.floor(s % 60);
+		return days + " days " + hours + " hours " + minutes + " minutes ";
+	}
+	
+	
+	var elapsedSimulationTimeDisplay = document.getElementById("elapsedSimulationTime");
+	
 	//bodies[0] = new Planet(1, "Earth",imageFolder + "Earth.webp", 6e18, 148, 3e-5, 0, 0);
 	//bodies[1] = new Planet(2, "Mars", imageFolder + "Mars.jpg", 6e17, 250, 2.4e-5, 0, 0); 
 	
@@ -125,9 +154,22 @@ document.addEventListener("DOMContentLoaded", function() {
 		// Draw the bodies
 		for (i in bodies){
 			bodies[i].drawBody(Sun);
-			bodies[i].updateTheta(60*60);
+			bodies[i].updateTheta(timeDelta);
 		}
-
+		
+		// Redraw bodies if clicked (so they are on-top)
+		for (i in bodies){
+			if (bodies[i].clicked) {
+			bodies[i].drawBody(Sun);
+			}
+		}
+		
+		fps = 1000/(Date.now() - lastframe);
+		fpsDisplay.innerHTML = Number.parseFloat(fps).toFixed(2);
+		lastframe = Date.now();
+		elapsedSimulationTimeDisplay.innerHTML = secondsToDHM(fps*secondsPerFrameSlider.value);
+		
+		
         requestAnimationFrame(draw); // Request the next frame
     }
 

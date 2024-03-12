@@ -86,6 +86,18 @@ $stmt->execute();
 
 $conn->close();
 
+echo "Planet ".$planetName." added to database";
+
+/* // Wait for 5 seconds
+  sleep(5);
+
+// Redirect to another page
+  header('Location: dbinterface.php');
+  exit(); */
+
+$message = "New record created successfully";
+echo "<script type='text/javascript'>alert('$message'); window.location.href = 'dbinterface.php';</script>";
+
 
 function sanitise_input($data) {
   $data = trim($data);

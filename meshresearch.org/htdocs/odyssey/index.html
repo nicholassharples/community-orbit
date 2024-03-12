@@ -10,9 +10,15 @@
     </style>
 </head>
 <body>
-    <canvas id="animationCanvas" width="1000" height="1000"></canvas>
+    <canvas id="animationCanvas" width="1920" height="1000"></canvas>
     <script src="script.js"></script>
-	<div style="display:none;">
-		<!-- <img id="Earth" src="Earth.webp" width="20" height="20" /> -->
+
+Current FPS: <span id="fpsValue"></span> 
+<br>
+<br>
+Simulation seconds per frame: <input type="range" min="0" max="86400" value="3600" class="slider" id="secondsPerFrame"> <span id="secondsPerFrameValue"></span> 
+<br>
+<br>
+1 second in real-life is approximately <span id="elapsedSimulationTime"></span>
 </body>
 </html>
