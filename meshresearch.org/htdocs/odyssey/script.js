@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 	
-	const imageFolder = "images/";
+	const imageFolder = "images/rescaled/";
 	
     const canvas = document.getElementById('animationCanvas');
     const ctx = canvas.getContext('2d');
@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		
 		this.image = new Image();
 		this.image.src = imageFileName;
+		
+		console.log(this.image.src);
 		
 		this.drawBody = function(star) {
 			ctx.drawImage(this.image, star.x + this.x(this.theta), star.y + this.y(this.theta), 20, 20);

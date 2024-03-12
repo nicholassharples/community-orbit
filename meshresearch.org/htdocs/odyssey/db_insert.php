@@ -1,11 +1,14 @@
 <?php
 $target_dir = "images/originals/";
+$rescaled_dir = "images/rescaled/";
 $source_file = basename($_FILES["fileToUpload"]["name"]);
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+//$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $imageFileType = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
 
-$target_file = $target_dir .date("Y-m-d h:i:s").".".$imageFileType;
+$target_file_name = date("Y-m-d-His").".".$imageFileType;
+$target_file = $target_dir .$target_file_name;
 
+echo $target_file_name;
 echo $target_file;
 
 // Check if image file is an actual image or fake image
@@ -42,35 +45,119 @@ if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg
 if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
     echo "Sorry, there was an error uploading your file.";
     exit;
+} else {
+	rescaleImage($target_file, $rescaled_dir .$target_file_name);
 }
 
-// $number1 = $_POST['number1'];
-// $number2 = $_POST['number2'];
+$planetName = sanitise_input($_POST['planetName']);
+$planetMass = $_POST['planetMass'];
+$planetDistance = $_POST['planetDistance'];
+$planetVelocity = $_POST['planetVelocity'];
+$planetTilt = $_POST['planetTilt'];
+$planetInitialAngle = $_POST['planetInitialAngle'];
+$planetDescription = sanitise_input($_POST['planetDescription']);
+$planetAuthor = sanitise_input($_POST['planetAuthor']);
 
-//Insert into Database
-// $servername = "localhost";
-// $username = "your_username";
-// $password = "your_password";
-// $dbname = "your_dbname";
+echo "Input obtained and sanitised<br>";
+
+// Rescale
+$planetMass = pow(10,($planetMass/100)) * 1e16;
+$planetVelocity = $planetVelocity * 1e-7;
+$planetTilt = $planetTilt * 2 / 360 * pi();
+$planetInitialAngle = $planetInitialAngle * 2 / 360 * pi();
+
+echo $planetName."<br>";
+echo $target_file_name."<br>";
+echo $planetMass."<br>";
+echo $planetDistance."<br>";
+echo $planetVelocity."<br>";
+echo $planetTilt."<br>";
+echo $planetInitialAngle."<br>";
+echo $planetDescription."<br>";
+echo $planetAuthor."<br>";
+
+
+// MySQL server connection settings
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "stfc_universe";
 
 //Create connection
-// $conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 //Check connection
-// if ($conn->connect_error) {
-    // die("Connection failed: " . $conn->connect_error);
-// }
+if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+}
 
-// $sql = "INSERT INTO your_table_name (image, number1, number2)
-// VALUES ('$target_file', $number1, $number2)";
+$query = "INSERT INTO celestial_objects (name, imageFileName, mass, maxDistance, velocityAtMaxDistance, axialTilt, initialAngle, description, author) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-// if ($conn->query($sql) === TRUE) {
-    // echo "New record created successfully";
-// } else {
-    // echo "Error: " . $sql . "<br>" . $conn->error;
-// }
 
-// $conn->close();
+
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ssdddddss", $planetName, $target_file_name, $planetMass, $planetDistance, $planetVelocity, $planetTilt, $planetInitialAngle, $planetDescription, $planetAuthor);
+$stmt->execute();
+
+
+$conn->close();
+
+
+function sanitise_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+
+function rescaleImage($originalImagePath, $rescaledImagePath) {
+    // Specify the new dimensions
+    $newWidth = 480;
+    $newHeight = 480;
+
+    // Get the original image's dimensions and type
+    list($width, $height, $imageType) = getimagesize($originalImagePath);
+
+    // Create a new true color image with the specified dimensions
+    $rescaledImage = imagecreatetruecolor($newWidth, $newHeight);
+
+    // Load the original image based on its type
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            $originalImage = imagecreatefromjpeg($originalImagePath);
+            break;
+        case IMAGETYPE_PNG:
+            $originalImage = imagecreatefrompng($originalImagePath);
+            break;
+        case IMAGETYPE_GIF:
+            $originalImage = imagecreatefromgif($originalImagePath);
+            break;
+        default:
+            echo "Unsupported image type!";
+            return;
+    }
+
+    // Resample the image
+    imagecopyresampled($rescaledImage, $originalImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    // Save the rescaled image
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            imagejpeg($rescaledImage, $rescaledImagePath);
+            break;
+        case IMAGETYPE_PNG:
+            imagepng($rescaledImage, $rescaledImagePath);
+            break;
+        case IMAGETYPE_GIF:
+            imagegif($rescaledImage, $rescaledImagePath);
+            break;
+    }
+
+    // Free up memory
+    imagedestroy($originalImage);
+    imagedestroy($rescaledImage);
+}
 ?>
 
 

@@ -12,7 +12,7 @@ $loginError = '';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize input
+    // Collect and sanitise input
     $user = sanitise_input($_POST['username']);
     $password = sanitise_input($_POST['password']);
 
