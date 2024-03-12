@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		this.velocityAtMaxDistance = velocityAtMaxDistance;
 		this.description = description;
 		this.author = author;
+		this.clicked = false;
 		
 		
 		this.angularVelocityAtMaxDistance = velocityAtMaxDistance/maxDistance;
@@ -45,13 +46,34 @@ document.addEventListener("DOMContentLoaded", function() {
 		this.image = new Image();
 		this.image.src = imageFileName;
 		
-		console.log(this.image.src);
+		this.height = 20;
+		this.width = 20;
 		
 		this.drawBody = function(star) {
-			ctx.drawImage(this.image, star.x + this.x(this.theta), star.y + this.y(this.theta), 20, 20);
+			ctx.drawImage(this.image, star.x + this.x(this.theta) - this.width / 2, star.y + this.y(this.theta) - this.height / 2, this.width, this.height);
 		}
+		
+		this.canvas = document.getElementById("animationCanvas"); // So the planet know what canvas it's on.
+		// Ensuring 'this' inside event listeners refers to the Planet object
+		this.canvas.addEventListener('click', this.handleClick.bind(this));
 	}
 	
+	Planet.prototype.handleClick = function(event) {
+	var rect = this.canvas.getBoundingClientRect();
+	console.log(rect);
+	var mouseX = event.clientX - rect.left;
+	var mouseY = event.clientY - rect.top;
+
+	// Check if the click is within the image boundaries
+	if (mouseX >= Sun.x + this.x(this.theta) - this.width / 2 && mouseX <= Sun.x + this.x(this.theta) + this.width / 2 && mouseY >= Sun.y + this.y(this.theta) - this.height / 2 && mouseY <= Sun.y + this.y(this.theta) + this.height / 2) {
+		this.clicked = !this.clicked; // Toggle the clicked state
+		this.width = this.clicked ? 480 : 20; // Change the image width on the clicked state
+		console.log(this.name);
+		this.height = this.clicked ? 480 : 20; // Change the image width on the clicked state
+	}
+	};
+
+
 
 	// Just one star for now!
 	var Sun = {};
@@ -82,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
 									data[i].description,
 									data[i].author)
 	}
-	console.log(bodies);
+	//console.log(bodies);
 	}
 	
 	

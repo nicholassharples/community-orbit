@@ -8,9 +8,6 @@ $imageFileType = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
 $target_file_name = date("Y-m-d-His").".".$imageFileType;
 $target_file = $target_dir .$target_file_name;
 
-echo $target_file_name;
-echo $target_file;
-
 // Check if image file is an actual image or fake image
 if(isset($_POST["submit"])) {
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -58,24 +55,11 @@ $planetInitialAngle = $_POST['planetInitialAngle'];
 $planetDescription = sanitise_input($_POST['planetDescription']);
 $planetAuthor = sanitise_input($_POST['planetAuthor']);
 
-echo "Input obtained and sanitised<br>";
-
 // Rescale
 $planetMass = pow(10,($planetMass/100)) * 1e16;
 $planetVelocity = $planetVelocity * 1e-7;
 $planetTilt = $planetTilt * 2 / 360 * pi();
 $planetInitialAngle = $planetInitialAngle * 2 / 360 * pi();
-
-echo $planetName."<br>";
-echo $target_file_name."<br>";
-echo $planetMass."<br>";
-echo $planetDistance."<br>";
-echo $planetVelocity."<br>";
-echo $planetTilt."<br>";
-echo $planetInitialAngle."<br>";
-echo $planetDescription."<br>";
-echo $planetAuthor."<br>";
-
 
 // MySQL server connection settings
 $servername = "localhost";
