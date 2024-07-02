@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 	
-	const imageFolder = "images/rescaled/";
+	const imageFolder = "images/rescaledalpha/";
 	
     const canvas = document.getElementById('animationCanvas');
     const ctx = canvas.getContext('2d');
@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	function loadData(data) {
 		//console.log(data);
 		for (i in data){
+			//fileName = data[i].imageFileName;
+			//trimmedFileName = fileName.substring(0, fileName.lastIndexOf('.'));
 			bodies[i] = new Planet(	data[i].id,
 									data[i].name,
 									imageFolder + data[i].imageFileName,
